@@ -5,17 +5,17 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-func repeatingKeyPressed(key ebiten.Key) bool {
+func isKeyJustPressedOrBeingHeld(key ebiten.Key) bool {
 	const (
 		delay    = 30
 		interval = 3
 	)
 
-	d := inpututil.KeyPressDuration(key)
-	if d == 1 {
+	pressDuration := inpututil.KeyPressDuration(key)
+	if pressDuration == 1 {
 		return true
 	}
-	if d >= delay && (d-delay)%interval == 0 {
+	if pressDuration >= delay && (pressDuration-delay)%interval == 0 {
 		return true
 	}
 	return false
@@ -28,14 +28,14 @@ func (g *Game) ExecCommand(key ebiten.Key) {
 		ebiten.KeyDown:  Down,
 	}
 	for key, direction := range movementKeys {
-		if repeatingKeyPressed(key) {
+		if isKeyJustPressedOrBeingHeld(key) {
 			if !g.piece.WillTouch(direction) {
 				g.piece.Move(direction)
 			}
 		}
 	}
 
-	if repeatingKeyPressed(ebiten.KeyUp) {
+	if isKeyJustPressedOrBeingHeld(ebiten.KeyUp) {
 		if g.piece.CanRotate() {
 			g.piece.Rotate()
 		}
