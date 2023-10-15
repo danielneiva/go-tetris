@@ -48,8 +48,8 @@ const (
 	SCREEN_WIDTH  = 640
 	SCREEN_HEIGHT = 480
 	TILE_SIDE     = 20
-	BOARD_WIDTH   = 20
-	BOARD_HEIGHT  = 40
+	BOARD_WIDTH   = 10
+	BOARD_HEIGHT  = 20
 	PADDING       = 200
 	TILE_POINT    = 100
 	TILES_PATH    = "assets/tiles.png"
@@ -63,7 +63,7 @@ var BASE_PIECES = map[string]Piece{
 			{0, 1, 0, 0},
 			{0, 0, 0, 0},
 		},
-		&Point{10, 0},
+		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
 	},
 	"L": {
@@ -73,7 +73,7 @@ var BASE_PIECES = map[string]Piece{
 			{0, 1, 1, 0},
 			{0, 0, 0, 0},
 		},
-		&Point{10, 0},
+		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
 	},
 	"J": {
@@ -83,7 +83,7 @@ var BASE_PIECES = map[string]Piece{
 			{1, 1, 0, 0},
 			{0, 0, 0, 0},
 		},
-		&Point{10, 0},
+		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
 	},
 	"_": {
@@ -93,7 +93,7 @@ var BASE_PIECES = map[string]Piece{
 			{0, 0, 0, 0},
 			{1, 1, 1, 1},
 		},
-		&Point{10, 0},
+		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
 	},
 	"O": {
@@ -103,7 +103,7 @@ var BASE_PIECES = map[string]Piece{
 			{0, 1, 1, 0},
 			{0, 1, 1, 0},
 		},
-		&Point{10, 0},
+		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
 	},
 	"Z": {
@@ -113,7 +113,7 @@ var BASE_PIECES = map[string]Piece{
 			{1, 1, 0, 0},
 			{0, 1, 1, 0},
 		},
-		&Point{10, 0},
+		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
 	},
 	"S": {
@@ -123,7 +123,7 @@ var BASE_PIECES = map[string]Piece{
 			{0, 1, 1, 0},
 			{1, 1, 0, 0},
 		},
-		&Point{10, 0},
+		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
 	},
 }
@@ -194,6 +194,7 @@ func (p *Piece) WillTouch(direction int) bool {
 }
 
 func (p *Piece) Move(direction int) {
+	// fmt.Println("Moving...")
 	switch direction {
 	case Left:
 		p.point.X -= 1
@@ -204,12 +205,14 @@ func (p *Piece) Move(direction int) {
 	}
 }
 func (p *Piece) Descend() {
+	// fmt.Println("Descending...")
 	if !p.WillTouch(Down) {
 		p.point.Y = p.point.Y + 1
 	}
 }
 
 func (p *Piece) AddToGameBoard() {
+	// fmt.Println("Adding to game board...")
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 4; j++ {
 			if p.body[i][j] != 0 {
@@ -233,9 +236,8 @@ type Game struct {
 	font          font.Face
 }
 
-func NewGame() *Game {
-	fmt.Println("Starting game...")
-	var g = &Game{}
+func (g *Game) NewGame() {
+	// fmt.Println("Starting game...")
 	g.LoadSprites()
 	g.LoadFonts()
 	g.InitBoard()
@@ -244,7 +246,6 @@ func NewGame() *Game {
 	g.ticks = 25
 	g.speed = 25
 	g.gameOver = false
-	return g
 }
 
 func (g *Game) InitBoard() {
@@ -285,22 +286,23 @@ func (g *Game) DescendRows(origin int) {
 	rowIsEmpty := true
 	var row []int
 	for i := 1; i < BOARD_WIDTH-1; i++ {
-		row = append(row, g.board[i][origin-1])
-		if g.board[i][origin-1] != 0 {
+		row = append(row, g.board[i][origin])
+		if g.board[i][origin] != 0 {
 			rowIsEmpty = false
 		}
 	}
 	if rowIsEmpty {
 		return
 	}
-	for i := 1; i < BOARD_WIDTH-2; i++ {
-		g.board[i][origin] = row[i-1]
-		g.board[i][origin-1] = 0
+	for i := 1; i < BOARD_WIDTH-1; i++ {
+		g.board[i][origin+1] = row[i-1]
+		g.board[i][origin] = 0
 	}
 	g.DescendRows(origin - 1)
 }
 
 func (g *Game) CheckForCompleteLines() {
+	// fmt.Println("Checking for completed lines...")
 	for j := BOARD_HEIGHT - 2; j > 0; j-- {
 		rowIsComplete := true
 		for i := 1; i < BOARD_WIDTH-1; i++ {
@@ -311,7 +313,8 @@ func (g *Game) CheckForCompleteLines() {
 		}
 		if rowIsComplete {
 			g.ClearRow(j)
-			g.DescendRows(j)
+			g.DescendRows(j - 1)
+			j++
 		}
 	}
 }
@@ -326,8 +329,8 @@ func (g *Game) PrintBoard() {
 	fmt.Println("==============================================================================================================================")
 }
 
-func (g *Game) restart() {
-	g = NewGame()
+func (g *Game) Restart() {
+	g.NewGame()
 }
 
 func (g *Game) DrawScore(screen *ebiten.Image) {
@@ -336,7 +339,8 @@ func (g *Game) DrawScore(screen *ebiten.Image) {
 }
 
 func (g *Game) CheckFirstLine() {
-	for i := 0; i < BOARD_WIDTH; i++ {
+	// fmt.Println("Checking first line...")
+	for i := 1; i < BOARD_WIDTH-1; i++ {
 		if g.board[i][1] != 0 {
 			g.gameOver = true
 			return
@@ -345,19 +349,22 @@ func (g *Game) CheckFirstLine() {
 }
 
 func (g *Game) GetNewPiece() {
+	// fmt.Println("Getting new Piece...")
 	g.CheckFirstLine()
 	index := rand.Intn(len(BASE_PIECES))
-	for _, newPiece := range BASE_PIECES {
+	newPiece := &Piece{}
+	for _, *newPiece = range BASE_PIECES {
 		if index == 0 {
-			g.piece = newPiece
+			g.piece = *newPiece
 		}
 		index--
 	}
-	g.piece.point = &Point{10, 0}
+	g.piece.point = &Point{BOARD_WIDTH / 2, 0}
 	g.piece.game = g
 }
 
 func (g *Game) LoadSprites() {
+	// fmt.Println("Loading Sprites...")
 	g.sprite, _, err = ebitenutil.NewImageFromFile(TILES_PATH)
 	if err != nil {
 		log.Fatal(err)
@@ -367,7 +374,7 @@ func (g *Game) LoadSprites() {
 func (g *Game) Update() error {
 	if g.gameOver {
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-			g.restart()
+			g.Restart()
 		}
 		return nil
 	}
@@ -416,7 +423,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.White)
 	for i := 0; i < BOARD_WIDTH; i++ {
 		for j := 0; j < BOARD_HEIGHT; j++ {
-			if g.board[i][j] != 0 {
+			switch g.board[i][j] {
+			case 1:
+				g.drawRec(screen, i, j, TILE_SIDE, TILE_SIDE, color.RGBA{0, 255, 0, 255}, g.board[i][j])
+			case 2:
 				g.drawRec(screen, i, j, TILE_SIDE, TILE_SIDE, color.RGBA{255, 0, 0, 255}, g.board[i][j])
 			}
 		}
@@ -442,7 +452,8 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	game := NewGame()
+	game := &Game{}
+	game.NewGame()
 	ebiten.SetWindowSize(SCREEN_WIDTH*2, SCREEN_HEIGHT*2)
 	ebiten.SetWindowTitle("Hello, World!")
 	if err := ebiten.RunGame(game); err != nil {
