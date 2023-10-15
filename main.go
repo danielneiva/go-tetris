@@ -45,11 +45,11 @@ const (
 )
 
 const (
-	SCREEN_WIDTH  = 640
-	SCREEN_HEIGHT = 480
+	SCREEN_WIDTH  = 400
+	SCREEN_HEIGHT = 1000
 	TILE_SIDE     = 20
-	BOARD_WIDTH   = 10
-	BOARD_HEIGHT  = 20
+	BOARD_WIDTH   = 20
+	BOARD_HEIGHT  = 40
 	PADDING       = 200
 	TILE_POINT    = 100
 	TILES_PATH    = "assets/tiles.png"
@@ -59,7 +59,7 @@ var BASE_PIECES = map[string]Piece{
 	"T": {
 		[4][4]int{
 			{0, 1, 0, 0},
-			{1, 1, 0, 0},
+			{0, 1, 1, 0},
 			{0, 1, 0, 0},
 			{0, 0, 0, 0},
 		},
@@ -78,9 +78,9 @@ var BASE_PIECES = map[string]Piece{
 	},
 	"J": {
 		[4][4]int{
-			{0, 1, 0, 0},
-			{0, 1, 0, 0},
-			{1, 1, 0, 0},
+			{0, 0, 1, 0},
+			{0, 0, 1, 0},
+			{0, 1, 1, 0},
 			{0, 0, 0, 0},
 		},
 		&Point{BOARD_WIDTH / 2, 0},
@@ -90,8 +90,8 @@ var BASE_PIECES = map[string]Piece{
 		[4][4]int{
 			{0, 0, 0, 0},
 			{0, 0, 0, 0},
-			{0, 0, 0, 0},
 			{1, 1, 1, 1},
+			{0, 0, 0, 0},
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
@@ -99,9 +99,9 @@ var BASE_PIECES = map[string]Piece{
 	"O": {
 		[4][4]int{
 			{0, 0, 0, 0},
+			{0, 1, 1, 0},
+			{0, 1, 1, 0},
 			{0, 0, 0, 0},
-			{0, 1, 1, 0},
-			{0, 1, 1, 0},
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
@@ -109,9 +109,9 @@ var BASE_PIECES = map[string]Piece{
 	"Z": {
 		[4][4]int{
 			{0, 0, 0, 0},
-			{0, 0, 0, 0},
 			{1, 1, 0, 0},
 			{0, 1, 1, 0},
+			{0, 0, 0, 0},
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
@@ -119,9 +119,9 @@ var BASE_PIECES = map[string]Piece{
 	"S": {
 		[4][4]int{
 			{0, 0, 0, 0},
-			{0, 0, 0, 0},
+			{0, 0, 1, 1},
 			{0, 1, 1, 0},
-			{1, 1, 0, 0},
+			{0, 0, 0, 0},
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
@@ -335,7 +335,7 @@ func (g *Game) Restart() {
 
 func (g *Game) DrawScore(screen *ebiten.Image) {
 	msg := fmt.Sprintf("SCORE: %d", g.score)
-	text.Draw(screen, msg, g.font, 100, 100, color.Black)
+	text.Draw(screen, msg, g.font, 0, 100, color.Black)
 }
 
 func (g *Game) CheckFirstLine() {
@@ -415,8 +415,8 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) drawRec(screen *ebiten.Image, x, y, w, h int, clr color.Color, val int) {
-	vector.DrawFilledRect(screen, float32(x*TILE_SIDE+PADDING), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), clr, true)
-	vector.StrokeRect(screen, float32(x*TILE_SIDE+PADDING), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), float32(2), color.RGBA{0, 0, 0, 255}, true)
+	vector.DrawFilledRect(screen, float32(x*TILE_SIDE), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), clr, true)
+	vector.StrokeRect(screen, float32(x*TILE_SIDE), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), float32(2), color.RGBA{0, 0, 0, 255}, true)
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
@@ -448,13 +448,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 720, 1280
+	return SCREEN_WIDTH, SCREEN_HEIGHT
 }
 
 func main() {
 	game := &Game{}
 	game.NewGame()
-	ebiten.SetWindowSize(SCREEN_WIDTH*2, SCREEN_HEIGHT*2)
+	ebiten.SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT)
 	ebiten.SetWindowTitle("Hello, World!")
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
