@@ -204,9 +204,9 @@ func (g *Game) Update() error {
 	return nil
 }
 
-func (g *Game) drawRec(screen *ebiten.Image, x, y, w, h int, bgColor color.Color, strkColor color.Color, val int) {
-	vector.DrawFilledRect(screen, float32(x*TILE_SIDE), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), bgColor, true)
-	vector.StrokeRect(screen, float32(x*TILE_SIDE), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), float32(2), strkColor, true)
+func (g *Game) drawRec(screen *ebiten.Image, x, y, w, h int, clr color.Color, val int) {
+	vector.DrawFilledRect(screen, float32(x*TILE_SIDE), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), clr, true)
+	vector.StrokeRect(screen, float32(x*TILE_SIDE), float32(y*TILE_SIDE+PADDING), float32(w), float32(h), float32(2), color.RGBA{0, 0, 0, 255}, true)
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
@@ -214,25 +214,20 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for i := 0; i < BOARD_WIDTH; i++ {
 		for j := 0; j < BOARD_HEIGHT; j++ {
 			var recColor color.RGBA
-			strkColor := color.RGBA{0, 0, 0, 255}
 			switch g.board[i][j] {
 			case 1:
 				recColor = color.RGBA{0, 255, 0, 255}
 			case 2:
 				recColor = color.RGBA{255, 0, 0, 255}
-			case 0:
-				strkColor = color.RGBA{0, 0, 0, 0}
 			}
-			g.drawRec(screen, i, j, TILE_SIDE, TILE_SIDE, recColor, strkColor, g.board[i][j])
+			g.drawRec(screen, i, j, TILE_SIDE, TILE_SIDE, recColor, g.board[i][j])
 		}
 	}
 
-	blueColor := color.RGBA{0, 0, 255, 255}
-	blackColor := color.RGBA{0, 0, 0, 255}
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 4; j++ {
 			if g.piece.body[i][j] != 0 {
-				g.drawRec(screen, g.piece.point.X+i, g.piece.point.Y+j, TILE_SIDE, TILE_SIDE, blueColor, blackColor, g.piece.body[i][j])
+				g.drawRec(screen, g.piece.point.X+i, g.piece.point.Y+j, TILE_SIDE, TILE_SIDE, color.RGBA{0, 0, 255, 255}, g.piece.body[i][j])
 			}
 		}
 	}
