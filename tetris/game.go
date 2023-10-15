@@ -170,25 +170,7 @@ func (g *Game) Update() error {
 		}
 		return nil
 	}
-
-	movementKeys := map[ebiten.Key]int{
-		ebiten.KeyLeft:  Left,
-		ebiten.KeyRight: Right,
-		ebiten.KeyDown:  Down,
-	}
-	for key, direction := range movementKeys {
-		if repeatingKeyPressed(key) {
-			if !g.piece.WillTouch(direction) {
-				g.piece.Move(direction)
-			}
-		}
-	}
-
-	if repeatingKeyPressed(ebiten.KeyUp) {
-		if g.piece.CanRotate() {
-			g.piece.Rotate()
-		}
-	}
+	g.HandleInput()
 
 	g.updateCounter++
 	//Control speed
