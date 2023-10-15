@@ -171,22 +171,24 @@ func (g *Game) Update() error {
 		return nil
 	}
 
-	movementKeys := map[ebiten.Key]int{
-		ebiten.KeyLeft:  Left,
-		ebiten.KeyRight: Right,
-		ebiten.KeyDown:  Down,
-	}
-	for key, direction := range movementKeys {
-		if repeatingKeyPressed(key) {
-			if !g.piece.WillTouch(direction) {
-				g.piece.Move(direction)
-			}
+	if repeatingKeyPressed(ebiten.KeyLeft) {
+		if !g.piece.WillTouch(Left) {
+			g.piece.Move(Left)
 		}
 	}
-
 	if repeatingKeyPressed(ebiten.KeyUp) {
 		if g.piece.CanRotate() {
 			g.piece.Rotate()
+		}
+	}
+	if repeatingKeyPressed(ebiten.KeyRight) {
+		if !g.piece.WillTouch(Right) {
+			g.piece.Move(Right)
+		}
+	}
+	if repeatingKeyPressed(ebiten.KeyDown) {
+		if !g.piece.WillTouch(Down) {
+			g.piece.Move(Down)
 		}
 	}
 
