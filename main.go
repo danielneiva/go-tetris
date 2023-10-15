@@ -1,15 +1,17 @@
 package main
 
 import (
-	"github.com/danielneiva/tp1-es2/game"
-	"github.com/hajimehoshi/ebiten"
 	"log"
+
+	"github.com/hajimehoshi/ebiten/v2"
+
+	"tp1-es2/tetris"
 )
 
 func main() {
-	game := &Game{}
+	game := &gotetris.Game{}
 	game.NewGame()
-	ebiten.SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT)
+	ebiten.SetWindowSize(gotetris.SCREEN_WIDTH, gotetris.SCREEN_HEIGHT)
 	ebiten.SetWindowTitle("Hello, World!")
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
