@@ -219,6 +219,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
+	g.piece.sprite.DrawSprite(screen)
+
 	g.DrawScore(screen)
 
 	op := &ebiten.DrawImageOptions{}

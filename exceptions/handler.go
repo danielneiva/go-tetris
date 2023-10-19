@@ -4,8 +4,8 @@ import (
 	"log"
 )
 
-func handle(err error) {
+func Handle(err error) {
 	if err != nil {
-		log.fatal(err)
+		log.Fatal(err)
 	}
 }

@@ -1,15 +1,19 @@
 package gotetris
 
+import (
+	"math/rand"
+)
+
 type Point struct {
 	X int
 	Y int
 }
 
 type Piece struct {
-	body  [4][4]int
-	point *Point
-	game  *Game
-	sprite Sprite
+	body   [4][4]int
+	point  *Point
+	game   *Game
+	sprite *Sprite
 }
 
 func (p *Piece) CanRotate() bool {
@@ -98,5 +102,6 @@ func (p *Piece) AddToGameBoard() {
 }
 
 func (p *Piece) SetSprite() {
-	p.sprite
+	pieceType := rand.Intn(4)
+	p.sprite.LoadSprite(pieceType*20, 0)
 }

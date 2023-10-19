@@ -5,7 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"tp1-es2/tetris"
+	"github.com/danielneiva/go-tetris/tetris"
 )
 
 func main() {

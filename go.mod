@@ -1,4 +1,4 @@
-module tp1-es2
+module github.com/danielneiva/go-tetris
 
 go 1.21.1
 
