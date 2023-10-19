@@ -9,6 +9,7 @@ type Piece struct {
 	body  [4][4]int
 	point *Point
 	game  *Game
+	sprite Sprite
 }
 
 func (p *Piece) CanRotate() bool {
@@ -94,4 +95,8 @@ func (p *Piece) AddToGameBoard() {
 	}
 	p.game.CheckForCompleteLines()
 	p.game.GetNewPiece()
+}
+
+func (p *Piece) SetSprite() {
+	p.sprite
 }

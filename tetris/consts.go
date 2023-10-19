@@ -12,12 +12,12 @@ const (
 )
 
 const (
-	SCREEN_WIDTH  = 400
-	SCREEN_HEIGHT = 1000
+	BOARD_WIDTH   = 8
+	BOARD_HEIGHT  = 14
 	TILE_SIDE     = 20
-	BOARD_WIDTH   = 20
-	BOARD_HEIGHT  = 40
-	PADDING       = 200
+	PADDING       = (TILE_SIDE*BOARD_HEIGHT)/5
+	SCREEN_WIDTH  = TILE_SIDE*BOARD_WIDTH
+	SCREEN_HEIGHT = TILE_SIDE*BOARD_HEIGHT+PADDING
 	TILE_POINT    = 100
 	TILES_PATH    = "assets/tiles.png"
 )
@@ -32,6 +32,7 @@ var BASE_PIECES = map[string]Piece{
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
+		&Sprite{},
 	},
 	"L": {
 		[4][4]int{
@@ -42,6 +43,7 @@ var BASE_PIECES = map[string]Piece{
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
+		&Sprite{},
 	},
 	"J": {
 		[4][4]int{
@@ -52,6 +54,7 @@ var BASE_PIECES = map[string]Piece{
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
+		&Sprite{},
 	},
 	"_": {
 		[4][4]int{
@@ -62,6 +65,7 @@ var BASE_PIECES = map[string]Piece{
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
+		&Sprite{},
 	},
 	"O": {
 		[4][4]int{
@@ -72,6 +76,7 @@ var BASE_PIECES = map[string]Piece{
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
+		&Sprite{},
 	},
 	"Z": {
 		[4][4]int{
@@ -82,6 +87,7 @@ var BASE_PIECES = map[string]Piece{
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
+		&Sprite{},
 	},
 	"S": {
 		[4][4]int{
@@ -92,5 +98,6 @@ var BASE_PIECES = map[string]Piece{
 		},
 		&Point{BOARD_WIDTH / 2, 0},
 		&Game{},
+		&Sprite{},
 	},
 }
